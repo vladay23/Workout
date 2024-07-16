@@ -3,28 +3,23 @@
 #include <vector>
 #include <algorithm>
 
-int main()
+//fills the vector dictionary with words and frequency of use
+void input(int n, int q, std::vector<std::pair<std::string, int>>& vocabulary, 
+            std::vector<std::string>& combs)
 {
-    int n, q, k;
-    std::string word;
-    std::vector<std::pair<std::string, int>> mas;
     std::pair<std::string, int> p;
+    std::string word;
+    int rate;
     
-    std::cin >> n >> q;
-    
-    //filling out the dictionary and the frequency of use of the word
     for (int i = 0; i < n; i++) {
-        std::cin >> word >> k;
-        p = std::make_pair(word, k);
-        mas.push_back(p);
+        std::cin >> word >> rate;
+        p = std::make_pair(word, rate);
+        vocabulary.push_back(p);
     }
     
-    std::vector<std::string> combs;
-    std::vector<std::string>::iterator c;
     std::string str = "";
     char s;
     
-    //filling in the prefix vector, after sequential execution of commands
     for (int i = 0; i < q; i++) {
         std::cin >> s;
         if (s == '+') {
@@ -34,41 +29,58 @@ int main()
         else if (s == '-' and str != "") str.pop_back();
         combs.push_back(str);
     }
+}
+
+//iterates through the prefixes and the corresponding words, 
+//outputs the ordinal numbers of the words 
+//with the highest frequency of use corresponding to the prefix
+void output_words_appropriate_prefixes(std::vector<std::pair<std::string, int>>& vocabulary, 
+                                       std::vector<std::string>& combs)
+{
+    std::vector<std::string>::iterator it;
     
-    for (c = combs.begin(); c != combs.end(); c++) {
-        std::vector<int> kol;
-        int max_kol = 0;
-        int res_kol = 0;
+    for (it = combs.begin(); it != combs.end(); it++) {
+        std::vector<int> rate;
+        int max_rate = 0;
+        int res_rate = 0;
         
-        /*if the word obtained from the commands is a prefix of a word 
-        from the dictionary, then the number of matches is considered and 
-        the filling of the vector with the number of frequency of use of the word*/
-        for (const auto& pair : mas) {
-            //if (pair.first.find(*c, 0) != std::string::npos) {
-            if (std::string(pair.first).find(*c) == 0) {
-                kol.push_back(pair.second);
-                res_kol++;
+        for (const auto& pair : vocabulary) {
+            if (std::string(pair.first).find(*it) == 0) {
+                rate.push_back(pair.second);
+                res_rate++;
             }
         }
         
-        //which corresponds to the most frequently used
-        max_kol = *max_element(begin(kol), end(kol));
+        max_rate = *max_element(begin(rate), end(rate));
         
-        //search for a word in the dictionary by key — frequency of use
-        int i = 0;
-        for (const auto& pair : mas) {
-            i++;
-            if (pair.second == max_kol) {
-                std::cout << " Word: " << pair.first << ", the number of words containing this prefix " 
-                << res_kol << ", the line number of the syllable " << i << std::endl;
+        int pos = 0;
+        for (const auto& pair : vocabulary) {
+            pos++;
+            if (pair.second == max_rate) {
+                std::cout << " Word: " << pair.first 
+                << ", the number of words containing this prefix " << res_rate 
+                << ", the line number of the syllable " << pos << std::endl;
                 break;
             }
         }
-        //clearing the vector
-        kol.clear();
+        
+        rate.clear();
     }
-    //clearing the vector
-    mas.clear();
+}
+
+int main()
+{
+    int N, Q;
+    std::cin >> N >> Q;
+    
+    std::vector<std::pair<std::string, int>> vocabulary;
+    std::vector<std::string> combs;
+    
+    input(N, Q, vocabulary, combs);
+    output_words_appropriate_prefixes(vocabulary, combs);
+    
+    combs.clear();
+    vocabulary.clear();
     
     return 0;
 }
