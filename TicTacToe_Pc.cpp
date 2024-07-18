@@ -131,41 +131,42 @@ void TicTacToe::checkCross(char board[3][3], int row, int col)
         }
     }
     
+    int stop = 0;
     if (col_i == 2) {
         for (int i = 0; i < 3; i++) {
-            if (board[i][col] == ' ') {
+            if (board[i][col] == ' ' && stop == 0) {
                 board[i][col] = 'O';
-                break;
+                stop++;
             }
         }
-    } else
-    if (row_i == 2) {
+    }
+    if (row_i == 2 && stop == 0) {
         for (int i = 0; i < 3; i++) {
-            if (board[row][i] == ' ') {
+            if (board[row][i] == ' ' && stop == 0) {
                 board[row][i] = 'O';
-                break;
+                stop++;
             }
         }
-    } else 
-    if (diag_1 == 2) {
+    }
+    if (diag_1 == 2 && stop == 0) {
         for (int i = 0; i < 3; i++) {
-            if (board[i][i] == ' ') {
+            if (board[i][i] == ' ' && stop == 0) {
                 board[i][i] = 'O';
-                break;
+                stop++;
             }
         }
-    } else
-    if (diag_2 == 2) {
+    }
+    if (diag_2 == 2 && stop == 0) {
         for (int i = 0; i < 3; i++) {
             for (int t = 0; t < 3; t++) {
-                if ((t + i == 2) && (board[i][t] == ' ')) {
+                if ((t + i == 2) && (board[i][t] == ' ') && stop == 0) {
                     board[i][t] = 'O';
-                    break;
+                    stop++;
                 }
             }
         }
     }
-    else {
+    if (stop == 0) {
         int l = 0;
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
@@ -177,6 +178,7 @@ void TicTacToe::checkCross(char board[3][3], int row, int col)
                 }
             }
         }
+    
     }
 }
 
@@ -202,7 +204,6 @@ void TicTacToe::realizGame()
     for (turn = 0; turn < 9; turn++) { 
 		
 		if (player == 'X') {
-		//if (turn%2 == 0) {
 		    
 		    drawBoard(board);
 		    
